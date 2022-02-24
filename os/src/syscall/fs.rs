@@ -1,7 +1,17 @@
+use crate::{
+    config::{APP_BASE_ADDRESS, APP_SIZE_LIMIT},
+    task,
+};
+
 const FD_STDOUT: usize = 1;
 
-// YOUR JOB: 修改 sys_write 使之通过测试
 pub fn sys_write(fd: usize, buf: *const u8, len: usize) -> isize {
+    let task_id = task::get_current_task_id();
+    let start = buf as usize;
+    let base_addr = APP_BASE_ADDRESS + task_id * APP_SIZE_LIMIT;
+    if start < base_addr || start + len > base_addr + APP_SIZE_LIMIT {
+        return -1;
+    }
     match fd {
         FD_STDOUT => {
             let slice = unsafe { core::slice::from_raw_parts(buf, len) };
@@ -10,7 +20,8 @@ pub fn sys_write(fd: usize, buf: *const u8, len: usize) -> isize {
             len as isize
         }
         _ => {
-            panic!("Unsupported fd in sys_write!");
+            error!("{}", "Unsupported fd in sys_write!");
+            -1
         }
     }
 }
