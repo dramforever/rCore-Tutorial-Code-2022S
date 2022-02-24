@@ -1,4 +1,4 @@
-use crate::task::{exit_current_and_run_next, suspend_current_and_run_next};
+use crate::task::{exit_current_and_run_next, suspend_current_and_run_next, TaskInfo, TaskStatus};
 use crate::timer::get_time_us;
 
 #[repr(C)]
@@ -30,7 +30,7 @@ pub fn sys_get_time(ts: *mut TimeVal, _tz: usize) -> isize {
     0
 }
 
-// YOUR JOB: 实现 Stride 调度算法和 sys_set_priority
-pub fn sys_set_priority(_prio: isize) -> isize {
+// YOUR JOB: Finish sys_task_info to pass testcases
+pub fn sys_task_info(ti: *mut TaskInfo) -> isize {
     -1
 }

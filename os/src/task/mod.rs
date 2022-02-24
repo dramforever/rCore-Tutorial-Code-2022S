@@ -3,12 +3,12 @@ mod switch;
 #[allow(clippy::module_inception)]
 mod task;
 
-use crate::config::MAX_APP_NUM;
+use crate::config::{MAX_APP_NUM, MAX_SYSCALL_NUM};
 use crate::loader::{get_num_app, init_app_cx};
 use crate::sync::UPSafeCell;
 use lazy_static::*;
 use switch::__switch;
-use task::{TaskControlBlock, TaskStatus};
+pub use task::{TaskControlBlock, TaskStatus};
 
 pub use context::TaskContext;
 
@@ -20,6 +20,15 @@ pub struct TaskManager {
 struct TaskManagerInner {
     tasks: [TaskControlBlock; MAX_APP_NUM],
     current_task: usize,
+}
+
+#[allow(unused)]
+pub struct TaskInfo {
+    id: usize,
+    status: TaskStatus,
+    syscall_ids: [usize; MAX_SYSCALL_NUM],
+    syscall_times: [usize; MAX_SYSCALL_NUM],
+    time: usize,
 }
 
 lazy_static! {
